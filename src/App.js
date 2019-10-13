@@ -7,30 +7,77 @@ import friends from "./friends.json";
 class App extends Component {
   // Setting this.state.friends to the friends json array
   state = {
-    friends
+    friends,
+    winnings: 0,
+    winState: false,
+    loseState: false
   };
 
-  removeFriend = id => {
+  componentDidMount() {
+    this.setState({ friends: this.shuffleArray(this.state.friends) })
+  }
+
+  /**
+ * Randomize array element order in-place.
+ * Using Durstenfeld shuffle algorithm.
+ */
+shuffleArray = (array) => {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
+
+  pickFriend = (id, picked) => {
     // Filter this.state.friends for friends with an id not equal to the id being removed
-    const friends = this.state.friends.filter(friend => friend.id !== id);
-    // Set this.state.friends equal to the new friends array
-    this.setState({ friends });
+    const friends = this.state.friends;
+
   };
+
+  handleGuess = id => {
+    let goodGuess = false;
+    const newFriends = this.state.friends.map( i => {
+      const newFriend = { ...i };
+      if (newFriend.id === id) {
+        if (!newFriend.clicked) {
+          newFriend.clicked = true;
+          goodGuess = true;
+        }
+      }
+      return newFriends;
+    })
+    
+  
+  }
 
   // Map over this.state.friends and render a FriendCard component for each friend object
   render() {
     return (
       <Wrapper>
-        <Title>Friends List</Title>
+        <Title
+          winnings={this.state.winnings}
+        >Friends List</Title>
         {this.state.friends.map(friend => (
           <FriendCard
-            removeFriend={this.removeFriend}
+            pickFriend={this.pickFriend}
             id={friend.id}
             key={friend.id}
             name={friend.name}
             image={friend.image}
             occupation={friend.occupation}
             location={friend.location}
+            picked={friend.picked}
           />
         ))}
       </Wrapper>
