@@ -45,6 +45,27 @@ shuffleArray = (array) => {
 
   };
 
+  handleGoodGuess = newGuess => {
+    const { winnings } = this.state;
+    const newWin = winnings + 1;
+    
+    this.setState({ friends: this.shuffleArray(newGuess),
+      winnings: newWin
+    });
+  };
+
+  handleBadGuess = newGuess => {
+    this.setState({
+      data: this.resetFriends(newGuess),
+      winnings: 0
+    });
+  };
+
+  resetGuess = guess => {
+    const resetGuess = guess.map(e => ({...e, clicked: false}))
+    return this.shuffleArray(resetGuess)
+  }
+
   handleGuess = id => {
     let goodGuess = false;
     const newFriends = this.state.friends.map( i => {
@@ -53,13 +74,12 @@ shuffleArray = (array) => {
         if (!newFriend.clicked) {
           newFriend.clicked = true;
           goodGuess = true;
-        }
-      }
+        };
+      };
       return newFriends;
-    })
-    
-  
-  }
+    });
+    goodGuess ? this.handleGoodGuess(newFriends) : this.handleBadGuess(newFriends);
+  };
 
   // Map over this.state.friends and render a FriendCard component for each friend object
   render() {
@@ -78,6 +98,7 @@ shuffleArray = (array) => {
             occupation={friend.occupation}
             location={friend.location}
             picked={friend.picked}
+            handleClick={this.handleGuess} 
           />
         ))}
       </Wrapper>
