@@ -39,32 +39,45 @@ shuffleArray = (array) => {
   return array;
 }
 
-  pickFriend = (id, picked) => {
-    // Filter this.state.friends for friends with an id not equal to the id being removed
-    const friends = this.state.friends;
+  // pickFriend = (id, picked) => {
+  //   // Filter this.state.friends for friends with an id not equal to the id being removed
+  //   const friends = this.state.friends;
 
-  };
+  // };
 
   handleGoodGuess = newGuess => {
     const { winnings } = this.state;
     const newWin = winnings + 1;
-    
-    this.setState({ friends: this.shuffleArray(newGuess),
-      winnings: newWin
-    });
+
+    if (winnings >= 5) {
+      this.setState({ friends: this.winGame(newGuess) });
+    } else {
+        this.setState({ friends: this.shuffleArray(newGuess),
+          winnings: newWin
+        });
+    ;}
   };
 
   handleBadGuess = newGuess => {
     this.setState({
-      data: this.resetFriends(newGuess),
+      data: this.resetGuess(newGuess),
       winnings: 0
     });
   };
 
-  resetGuess = guess => {
-    const resetGuess = guess.map(e => ({...e, clicked: false}))
-    return this.shuffleArray(resetGuess)
+  winGame = guess => {
+    alert('You win!')
+    const winGame = guess.map(e => ({ ...e, clicked: false}))
+    window.location.reload('/');
+    return this.shuffleArray(winGame);
   }
+
+  resetGuess = guess => {
+    alert('Wrong Pick!')
+    const resetGuess = guess.map(e => ({ ...e, clicked: false}))
+    window.location.reload('/');
+    return this.shuffleArray(resetGuess);
+  };
 
   handleGuess = id => {
     let goodGuess = false;
@@ -76,7 +89,7 @@ shuffleArray = (array) => {
           goodGuess = true;
         };
       };
-      return newFriends;
+      return newFriend;
     });
     goodGuess ? this.handleGoodGuess(newFriends) : this.handleBadGuess(newFriends);
   };

@@ -12,15 +12,15 @@ function FriendCard(props) {
           <li>
             <strong>Name:</strong> {props.name}
           </li>
-          <li>
+          {/* <li>
             <strong>Occupation:</strong> {props.occupation}
           </li>
           <li>
             <strong>Location:</strong> {props.location}
-          </li>
+          </li> */}
         </ul>
       </div>
-      <span onClick={() => props.pickFriend(props.id, props.picked)} className="remove">
+      <span onClick={() => props.handleClick(props.id)} className="remove">
         𝘅
       </span>
     </div>
